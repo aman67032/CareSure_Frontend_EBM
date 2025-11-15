@@ -26,6 +26,12 @@ class ErrorBoundary extends Component<
     console.error('Error caught by boundary:', error, errorInfo);
     console.error('Error stack:', error.stack);
     console.error('Component stack:', errorInfo.componentStack);
+    console.error('Error message:', error.message);
+    // Log to help debug GLB loading issues
+    if (error.message?.includes('GLB') || error.message?.includes('gltf') || error.message?.includes('model')) {
+      console.error('GLB file loading error detected. This might be a Git LFS issue on Vercel.');
+      console.error('Make sure Git LFS is configured in Vercel build settings.');
+    }
   }
 
   render() {

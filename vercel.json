@@ -1,0 +1,21 @@
+{
+  "buildCommand": "git lfs pull && npm run build",
+  "installCommand": "git lfs install && npm install",
+  "framework": "nextjs",
+  "headers": [
+    {
+      "source": "/(.*\\.glb)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "model/gltf-binary"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}
+
