@@ -60,18 +60,18 @@ class ErrorBoundary extends Component<
 }
 
 // Camera position configurations for each section
-// Note: Prototype 1 model is rotated 180° to show front, so rotations are adjusted
+// All positions now focus on center (0, 0, 0) since models are centered
 const cameraPositions: Record<string, { position: [number, number, number]; target: [number, number, number]; rotation: number }> = {
-  section1: { position: [0, 2, 5], target: [0, 1.5, 0], rotation: Math.PI }, // Front view (180° for prototype 1)
-  section2: { position: [0, 3, 4], target: [0, 2, 0], rotation: Math.PI }, // Top view
-  section3: { position: [0, 0, -5], target: [0, 0, -1.5], rotation: 0 }, // Back view (0° because model is rotated)
-  section4: { position: [0, 2, 5], target: [0, 1.5, 0], rotation: Math.PI }, // Front view
-  section5: { position: [3, 1.5, 3], target: [0, 0, 0], rotation: Math.PI + Math.PI / 4 }, // Side view adjusted
-  section6: { position: [0, 2, 5], target: [0, 1, 0], rotation: Math.PI }, // Front view
-  section7: { position: [-4, 1, 0], target: [-2, 0, 0], rotation: Math.PI / 2 }, // Left side
-  section8: { position: [0, -2, 4], target: [0, -1, 0], rotation: 0 }, // Bottom view
-  section9: { position: [0, 2, 5], target: [0, 1, 0], rotation: Math.PI }, // Front view
-  section10: { position: [0, 2, 5], target: [0, 1, 0], rotation: Math.PI }, // Front view
+  section1: { position: [0, 0.5, 3], target: [0, 0, 0], rotation: Math.PI }, // Front view - centered
+  section2: { position: [0, 3, 0.5], target: [0, 0, 0], rotation: Math.PI }, // Top view - looking down
+  section3: { position: [0, 0.5, -3], target: [0, 0, 0], rotation: 0 }, // Back view
+  section4: { position: [0, 0.5, 3], target: [0, 0, 0], rotation: Math.PI }, // Front view
+  section5: { position: [2.5, 0.5, 2.5], target: [0, 0, 0], rotation: Math.PI + Math.PI / 4 }, // Side view - angled
+  section6: { position: [0, 0.5, 3], target: [0, 0, 0], rotation: Math.PI }, // Front view
+  section7: { position: [-3, 0.5, 0], target: [0, 0, 0], rotation: Math.PI / 2 }, // Left side
+  section8: { position: [0, -3, 0.5], target: [0, 0, 0], rotation: 0 }, // Bottom view - looking up
+  section9: { position: [0, 0.5, 3], target: [0, 0, 0], rotation: Math.PI }, // Front view
+  section10: { position: [0, 0.5, 3], target: [0, 0, 0], rotation: Math.PI }, // Front view
 };
 
 // Interactive Annotation Component for 3D space
@@ -146,16 +146,38 @@ function Model({ url, activeSection }: { url: string; activeSection: string | nu
   const targetRotationRef = useRef(0);
   const animationRef = useRef<any>(null);
   const isInitializedRef = useRef(false);
+  const isCenteredRef = useRef(false);
   
-  // Clone the scene to avoid issues with multiple instances
+  // Center and focus the model
   useEffect(() => {
-    if (scene && meshRef.current) {
+    if (scene && meshRef.current && !isCenteredRef.current) {
+      // Calculate bounding box
+      const box = new THREE.Box3().setFromObject(scene);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      
+      // Find the maximum dimension for scaling
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const scale = 2 / maxDim; // Scale to fit in a 2-unit space
+      
+      // Center the model at origin
+      scene.position.x = -center.x;
+      scene.position.y = -center.y;
+      scene.position.z = -center.z;
+      
+      // Apply scale to make it visible
+      scene.scale.set(scale, scale, scale);
+      
+      // Enable shadows
       scene.traverse((child) => {
         if (child instanceof THREE.Mesh) {
           child.castShadow = true;
           child.receiveShadow = true;
         }
       });
+      
+      isCenteredRef.current = true;
+      console.log('Model centered:', { center, size, scale });
     }
   }, [scene]);
 
@@ -289,9 +311,9 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
           camera.lookAt(config.target[0], config.target[1], config.target[2]);
         }
       } else {
-        // Default front view
-        camera.position.set(0, 2, 5);
-        camera.lookAt(0, 1.5, 0);
+        // Default front view - centered on model
+        camera.position.set(0, 0.5, 3);
+        camera.lookAt(0, 0, 0);
       }
     } catch (error) {
       console.error('Error setting initial camera position:', error);
@@ -309,8 +331,9 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
         enablePan={true}
         enableZoom={true}
         enableRotate={true}
-        minDistance={3}
-        maxDistance={10}
+        minDistance={1.5}
+        maxDistance={8}
+        target={[0, 0, 0]}
       />
       <Suspense fallback={
         <Html center>
@@ -328,7 +351,7 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
       {activeSection === 'section1' && (
         <>
           <ModelAnnotation 
-            position={[0, 1.5, 0]} 
+            position={[0, 0.3, 0]} 
             label={selectedPrototype === 'prototype1' ? "Compartment Tray" : "Grid Compartments"} 
             description={selectedPrototype === 'prototype1' ? "White blocks hold blister strips" : "8-28 compartments in grid layout with flip-top lids"}
             isActive={true}
@@ -337,13 +360,13 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
           {selectedPrototype === 'prototype1' && (
             <>
               <ModelAnnotation 
-                position={[0.8, 1.5, 0.3]} 
+                position={[0.5, 0.3, 0.2]} 
                 label="Green LED" 
                 description="Current dose indicator"
                 isActive={true}
               />
               <ModelAnnotation 
-                position={[-0.8, 1.5, 0.3]} 
+                position={[-0.5, 0.3, 0.2]} 
                 label="Red LED" 
                 description="Missed/wrong dose alert"
                 isActive={true}
@@ -353,13 +376,13 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
           {selectedPrototype === 'prototype2' && (
             <>
               <ModelAnnotation 
-                position={[0.8, 1.5, 0.3]} 
+                position={[0.5, 0.3, 0.2]} 
                 label="Flip-Top Lid" 
                 description="Individual transparent lids with soft-close hinges"
                 isActive={true}
               />
               <ModelAnnotation 
-                position={[-0.8, 1.5, 0.3]} 
+                position={[-0.5, 0.3, 0.2]} 
                 label="Foam-Magnet Sensor" 
                 description="Detects pill removal via magnet position shift"
                 isActive={true}
@@ -371,7 +394,7 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
       
       {activeSection === 'section2' && (
         <ModelAnnotation 
-          position={[0, 2, 0]} 
+          position={[0, 0.5, 0]} 
           label={selectedPrototype === 'prototype1' ? "Main Lid & Sensor" : "Individual Lids"} 
           description={selectedPrototype === 'prototype1' ? "Magnetic/Hall effect sensor" : "Flip-top lids with child-resistant locks"}
           isActive={true}
@@ -380,7 +403,7 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
       
       {activeSection === 'section3' && (
         <ModelAnnotation 
-          position={[0, 0, -1.5]} 
+          position={[0, 0, -0.5]} 
           label={selectedPrototype === 'prototype1' ? "Electronics Chamber" : "Central Electronics Panel"} 
           description={selectedPrototype === 'prototype1' ? "ESP32, WiFi, Power, Buzzer" : "OLED/LCD screen, buttons, ESP32, battery management"}
           isActive={true}
@@ -389,7 +412,7 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
       
       {activeSection === 'section5' && selectedPrototype === 'prototype2' && (
         <ModelAnnotation 
-          position={[0, -0.5, 0]} 
+          position={[0, -0.3, 0]} 
           label="Hall-Effect Sensor PCB" 
           description="Detects magnet movement when pill is removed"
           isActive={true}
@@ -398,7 +421,7 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
 
       {activeSection === 'section7' && (
         <ModelAnnotation 
-          position={[-2, 0, 0]} 
+          position={[-0.8, 0, 0]} 
           label="Back Panel" 
           description="USB-C, QR Code, Battery"
           isActive={true}
@@ -407,7 +430,7 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
 
       {activeSection === 'section8' && (
         <ModelAnnotation 
-          position={[0, -1, 0]} 
+          position={[0, -0.5, 0]} 
           label="Base & Mount" 
           description="Anti-slip feet, Ventilation"
           isActive={true}
@@ -416,7 +439,7 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
 
       {activeSection === 'section10' && (
         <ModelAnnotation 
-          position={[0, 2, 0]} 
+          position={[0, 0.5, 0]} 
           label="Prototype Setup" 
           description="Arduino/ESP32 Development Guide"
           isActive={true}
@@ -658,7 +681,7 @@ export default function HardwarePage() {
                 </div>
               }
             >
-              <Canvas camera={{ position: [0, 2, 5], fov: 50 }} gl={{ antialias: true, alpha: false }}>
+              <Canvas camera={{ position: [0, 0.5, 3], fov: 50 }} gl={{ antialias: true, alpha: false }}>
                 <Scene activeSection={activeSection} onSectionChange={setActiveSection} selectedPrototype={selectedPrototype} />
               </Canvas>
             </ErrorBoundary>
