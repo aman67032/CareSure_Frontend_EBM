@@ -100,7 +100,9 @@ function Model({ url, activeSection }: { url: string; activeSection: string | nu
 
   // Set initial rotation based on which model is loaded
   useEffect(() => {
-    if (meshRef.current && !isInitializedRef.current) {
+    if (!meshRef.current || isInitializedRef.current) return;
+    
+    try {
       // Check if it's prototype 1 (unffsxgvtitled.glb) - needs rotation to show front
       if (url.includes('unffsxgvtitled')) {
         // Rotate to show front view (adjust angle as needed)
@@ -114,6 +116,8 @@ function Model({ url, activeSection }: { url: string; activeSection: string | nu
         targetRotationRef.current = 0;
       }
       isInitializedRef.current = true;
+    } catch (error) {
+      console.error('Error setting initial model rotation:', error);
     }
   }, [url]);
 
@@ -205,18 +209,24 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
 
   // Set initial camera position when component mounts
   useEffect(() => {
-    if (activeSection) {
-      const config = cameraPositions[activeSection];
-      if (config) {
-        camera.position.set(config.position[0], config.position[1], config.position[2]);
-        camera.lookAt(config.target[0], config.target[1], config.target[2]);
+    if (!camera) return;
+    
+    try {
+      if (activeSection) {
+        const config = cameraPositions[activeSection];
+        if (config) {
+          camera.position.set(config.position[0], config.position[1], config.position[2]);
+          camera.lookAt(config.target[0], config.target[1], config.target[2]);
+        }
+      } else {
+        // Default front view
+        camera.position.set(0, 2, 5);
+        camera.lookAt(0, 1.5, 0);
       }
-    } else {
-      // Default front view
-      camera.position.set(0, 2, 5);
-      camera.lookAt(0, 1.5, 0);
+    } catch (error) {
+      console.error('Error setting initial camera position:', error);
     }
-  }, []);
+  }, [camera, activeSection]);
 
   return (
     <>
@@ -224,6 +234,14 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
       <directionalLight position={[10, 10, 5]} intensity={1.5} />
       <pointLight position={[-10, -10, -5]} intensity={0.8} />
       <spotLight position={[0, 10, 0]} angle={0.3} penumbra={1} intensity={1} />
+      <OrbitControls 
+        ref={controlsRef}
+        enablePan={true}
+        enableZoom={true}
+        enableRotate={true}
+        minDistance={3}
+        maxDistance={10}
+      />
       <Suspense fallback={
         <Html center>
           <div className="text-white font-semibold text-xl">Loading 3D model...</div>
