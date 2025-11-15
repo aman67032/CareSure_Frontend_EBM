@@ -173,16 +173,16 @@ export default function LoginPage() {
         <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-blue-400 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
-      <div className="max-w-md w-full space-y-8 relative z-10">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8 relative z-10">
         <div className="text-center">
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-4 sm:mb-6">
             <img 
               src="/logo.png" 
               alt="CareSure Logo" 
-              className="h-20 w-auto drop-shadow-lg"
+              className="h-16 sm:h-20 w-auto drop-shadow-lg"
             />
           </div>
-          <h2 className="text-4xl font-extrabold bg-gradient-to-r from-orange-400 via-blue-400 to-violet-400 bg-clip-text text-transparent drop-shadow-lg">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-orange-400 via-blue-400 to-violet-400 bg-clip-text text-transparent drop-shadow-lg">
             Sign in to CareSure
           </h2>
                  <p className="mt-4 text-center text-sm text-slate-300">
@@ -217,7 +217,7 @@ export default function LoginPage() {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none relative block w-full px-4 py-3 border border-slate-500 placeholder-slate-400 text-white rounded-lg bg-slate-700/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:z-10 transition-all shadow-inner"
+                className="appearance-none relative block w-full px-4 py-3.5 sm:py-3 border border-slate-500 placeholder-slate-400 text-white rounded-lg bg-slate-700/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:z-10 transition-all shadow-inner text-base min-h-[44px] touch-manipulation"
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -233,7 +233,7 @@ export default function LoginPage() {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="appearance-none relative block w-full px-4 py-3 border border-slate-500 placeholder-slate-400 text-white rounded-lg bg-slate-700/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-violet-400 focus:z-10 transition-all shadow-inner"
+                className="appearance-none relative block w-full px-4 py-3.5 sm:py-3 border border-slate-500 placeholder-slate-400 text-white rounded-lg bg-slate-700/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-violet-400 focus:z-10 transition-all shadow-inner text-base min-h-[44px] touch-manipulation"
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -248,7 +248,7 @@ export default function LoginPage() {
                 setShowChangePassword(true);
                 setPasswordChangeData({ ...passwordChangeData, email: formData.email });
               }}
-              className="text-sm text-blue-300 hover:text-blue-200 transition-colors"
+              className="text-sm text-blue-300 hover:text-blue-200 transition-colors min-h-[44px] px-2 touch-manipulation"
             >
               Change Password?
             </button>
@@ -258,7 +258,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-orange-400 via-blue-400 to-violet-400 hover:from-orange-300 hover:via-blue-300 hover:to-violet-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 disabled:opacity-50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-blue-400/60 brightness-110"
+              className="group relative w-full flex justify-center py-3.5 sm:py-3 px-4 border border-transparent text-base sm:text-sm font-semibold rounded-lg text-white bg-gradient-to-r from-orange-400 via-blue-400 to-violet-400 hover:from-orange-300 hover:via-blue-300 hover:to-violet-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 disabled:opacity-50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-blue-400/60 brightness-110 min-h-[44px] touch-manipulation active:scale-95"
             >
               {loading ? (
                 <span className="flex items-center">

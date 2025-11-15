@@ -21,37 +21,37 @@ export default function Home() {
         />
       </div>
       {/* Hero Section */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
         <div className="text-center">
-          <div className="mb-8 flex justify-center">
+          <div className="mb-6 sm:mb-8 flex justify-center">
             <img 
               src="/logo.png" 
               alt="CareSure Logo" 
-              className="h-44 w-auto drop-shadow-lg"
+              className="h-32 sm:h-40 md:h-44 w-auto drop-shadow-lg"
             />
           </div>
-          <h1 className="text-5xl font-bold text-white mb-6 drop-shadow-lg">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6 drop-shadow-lg px-4">
             CareSure: Smart Medication Management
           </h1>
-          <p className="text-xl text-white mb-8 max-w-2xl mx-auto font-semibold drop-shadow-md">
+          <p className="text-base sm:text-lg md:text-xl text-white mb-6 sm:mb-8 max-w-2xl mx-auto font-semibold drop-shadow-md px-4">
             Caregivers stay informed. Elders stay safe.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4">
             <Link
               href="/login"
-              className="bg-orange-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-700 transition shadow-lg"
+              className="w-full sm:w-auto bg-orange-600 text-white px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-orange-700 transition shadow-lg min-h-[44px] flex items-center justify-center touch-manipulation active:scale-95"
             >
               Caregiver Login
             </Link>
             <Link
               href="/signup"
-              className="bg-white text-orange-600 px-8 py-3 rounded-lg font-semibold border-2 border-orange-600 hover:bg-orange-50 transition shadow-lg"
+              className="w-full sm:w-auto bg-white text-orange-600 px-6 sm:px-8 py-3 rounded-lg font-semibold border-2 border-orange-600 hover:bg-orange-50 transition shadow-lg min-h-[44px] flex items-center justify-center touch-manipulation active:scale-95"
             >
               Sign Up
             </Link>
             <Link
               href="/patient/login"
-              className="bg-violet-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-violet-700 transition shadow-lg"
+              className="w-full sm:w-auto bg-violet-600 text-white px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-violet-700 transition shadow-lg min-h-[44px] flex items-center justify-center touch-manipulation active:scale-95"
             >
               Patient Login
             </Link>
@@ -59,23 +59,23 @@ export default function Home() {
         </div>
 
         {/* Features Section */}
-        <div className="mt-20 grid md:grid-cols-3 gap-8">
+        <div className="mt-12 sm:mt-16 md:mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
           <div 
-            className="group p-8 rounded-2xl transition-all duration-500 hover:scale-105 hover:bg-white/10 backdrop-blur-sm cursor-pointer border-2 border-transparent hover:border-orange-400/50"
+            className="group p-6 sm:p-8 rounded-2xl transition-all duration-500 hover:scale-105 hover:bg-white/10 backdrop-blur-sm cursor-pointer border-2 border-transparent hover:border-orange-400/50 touch-manipulation active:scale-95"
             style={{ 
               transformStyle: 'preserve-3d',
               transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
-            <div className="mb-6 transform transition-transform duration-500 group-hover:scale-125 group-hover:rotate-12 w-16 h-16 mx-auto">
+            <div className="mb-4 sm:mb-6 transform transition-transform duration-500 group-hover:scale-125 group-hover:rotate-12 w-12 h-12 sm:w-16 sm:h-16 mx-auto">
               <svg className="w-full h-full text-white group-hover:text-orange-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-orange-200 transition-colors duration-300">
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-white group-hover:text-orange-200 transition-colors duration-300">
               Smart Reminders
             </h3>
-            <p className="text-white/90 leading-relaxed group-hover:text-white transition-colors duration-300">
+            <p className="text-sm sm:text-base text-white/90 leading-relaxed group-hover:text-white transition-colors duration-300">
               Automated medication reminders with device integration and mobile notifications
             </p>
             <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">

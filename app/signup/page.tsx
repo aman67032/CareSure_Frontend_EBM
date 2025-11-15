@@ -45,17 +45,17 @@ export default function SignupPage() {
       {/* Gradient mesh overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-orange-50/20 via-transparent to-violet-50/20"></div>
 
-      <div className="max-w-md w-full space-y-8 relative z-10">
-        <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-6">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8 relative z-10">
+        <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-2xl p-6 sm:p-8 border border-white/20">
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="flex justify-center mb-4 sm:mb-6">
               <img 
                 src="/logo.png" 
                 alt="CareSure Logo" 
-                className="h-20 w-auto drop-shadow-lg"
+                className="h-16 sm:h-20 w-auto drop-shadow-lg"
               />
             </div>
-            <h2 className="text-4xl font-extrabold bg-gradient-to-r from-orange-500 via-blue-500 to-violet-500 bg-clip-text text-transparent">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-orange-500 via-blue-500 to-violet-500 bg-clip-text text-transparent">
               Create your CareSure account
             </h2>
             <p className="mt-4 text-center text-sm text-gray-600">
@@ -83,7 +83,7 @@ export default function SignupPage() {
                   name="name"
                   type="text"
                   required
-                  className="appearance-none relative block w-full px-4 py-3 border-2 border-gray-200 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition-all shadow-sm hover:shadow-md"
+                  className="appearance-none relative block w-full px-4 py-3.5 sm:py-3 border-2 border-gray-200 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition-all shadow-sm hover:shadow-md text-base min-h-[44px] touch-manipulation"
                   placeholder="John Doe"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -145,7 +145,7 @@ export default function SignupPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-orange-500 via-blue-500 to-violet-500 hover:from-orange-600 hover:via-blue-600 hover:to-violet-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/50 transform hover:scale-[1.02]"
+                className="group relative w-full flex justify-center py-3.5 sm:py-3 px-4 border border-transparent text-base sm:text-sm font-semibold rounded-lg text-white bg-gradient-to-r from-orange-500 via-blue-500 to-violet-500 hover:from-orange-600 hover:via-blue-600 hover:to-violet-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/50 transform hover:scale-[1.02] min-h-[44px] touch-manipulation active:scale-95"
               >
                 {loading ? (
                   <span className="flex items-center">

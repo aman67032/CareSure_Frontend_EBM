@@ -120,16 +120,16 @@ export default function PatientLoginPage() {
         <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-rose-400 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
-      <div className="max-w-md w-full space-y-8 relative z-10">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8 relative z-10">
         <div className="text-center">
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-4 sm:mb-6">
             <img 
               src="/logo.png" 
               alt="CareSure Logo" 
-              className="h-20 w-auto drop-shadow-lg"
+              className="h-16 sm:h-20 w-auto drop-shadow-lg"
             />
           </div>
-          <h2 className="text-4xl font-extrabold bg-gradient-to-r from-orange-600 via-rose-500 to-violet-600 bg-clip-text text-transparent drop-shadow-lg">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-orange-600 via-rose-500 to-violet-600 bg-clip-text text-transparent drop-shadow-lg">
             Patient Login
           </h2>
           <p className="mt-4 text-center text-sm text-amber-800/70">
@@ -158,7 +158,7 @@ export default function PatientLoginPage() {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none relative block w-full px-4 py-3 border border-orange-200/50 placeholder-amber-400/50 text-amber-900 rounded-xl bg-white/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-violet-400 transition-all shadow-inner"
+                className="appearance-none relative block w-full px-4 py-3.5 sm:py-3 border border-orange-200/50 placeholder-amber-400/50 text-amber-900 rounded-xl bg-white/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-violet-400 transition-all shadow-inner text-base min-h-[44px] touch-manipulation"
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -199,7 +199,7 @@ export default function PatientLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-orange-500 via-rose-500 to-violet-500 hover:from-orange-400 hover:via-rose-400 hover:to-violet-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-400 disabled:opacity-50 transition-all duration-300 shadow-xl hover:shadow-2xl"
+              className="group relative w-full flex justify-center py-3.5 sm:py-3 px-4 border border-transparent text-base sm:text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-orange-500 via-rose-500 to-violet-500 hover:from-orange-400 hover:via-rose-400 hover:to-violet-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-400 disabled:opacity-50 transition-all duration-300 shadow-xl hover:shadow-2xl min-h-[44px] touch-manipulation active:scale-95"
             >
               {loading ? (
                 <span className="flex items-center">

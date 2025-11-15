@@ -70,12 +70,12 @@ export default function DashboardPage() {
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-600 via-rose-500 to-violet-600 bg-clip-text text-transparent mb-8 drop-shadow-sm">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-600 via-rose-500 to-violet-600 bg-clip-text text-transparent mb-6 sm:mb-8 drop-shadow-sm">
           Dashboard
         </h1>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <div className="bg-white/70 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-orange-200/50 hover:border-orange-400 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-gradient-to-br from-orange-400/20 to-orange-500/20 rounded-xl backdrop-blur-sm">

@@ -395,22 +395,22 @@ export default function HardwarePage() {
     <AuthGuard>
       <div className="min-h-screen bg-[#0a0a0a] text-white overflow-x-hidden">
         {/* Minimal Hero */}
-        <div className="relative py-8 px-6">
+        <div className="relative py-4 sm:py-6 md:py-8 px-4 sm:px-6">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent leading-tight">
               Hardware Blueprint
             </h1>
-            <p className="text-gray-400 text-lg mb-6">
+            <p className="text-gray-400 text-sm sm:text-base md:text-lg mb-4 sm:mb-6">
               Interactive 3D exploration of the CareSure Smart Medicine Box
             </p>
             
             {/* Purchase Button - Hero */}
-            <div className="mb-6">
+            <div className="mb-4 sm:mb-6">
               <a
                 href="https://payments.cashfree.com/forms?code=dfweg"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white font-bold px-8 py-4 rounded-full text-lg shadow-2xl shadow-emerald-500/50 hover:shadow-emerald-500/70 transition-all duration-300 hover:scale-105 transform"
+                className="inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white font-bold px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base md:text-lg shadow-2xl shadow-emerald-500/50 hover:shadow-emerald-500/70 transition-all duration-300 hover:scale-105 transform min-h-[44px] touch-manipulation"
                 onClick={(e) => {
                   // Add animation on click
                   gsap.to(e.currentTarget, {
@@ -422,26 +422,28 @@ export default function HardwarePage() {
                   });
                 }}
               >
-                <span className="text-2xl">🛒</span>
-                <span>Purchase CareSure Device</span>
-                <span className="text-xl">→</span>
+                <span className="text-xl sm:text-2xl">🛒</span>
+                <span className="hidden sm:inline">Purchase CareSure Device</span>
+                <span className="sm:hidden">Purchase Device</span>
+                <span className="text-lg sm:text-xl">→</span>
               </a>
             </div>
             
-            {/* Compact Section Pills */}
-            <div className="flex flex-wrap gap-2 mb-6">
+            {/* Compact Section Pills - Mobile Optimized */}
+            <div className="flex flex-wrap gap-2 mb-4 sm:mb-6 overflow-x-auto pb-2 -mx-4 sm:mx-0 px-4 sm:px-0">
               {hardwareSections.map((section) => (
                 <button
                   key={section.id}
                   onClick={() => handleSectionClick(section.id)}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 ${
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 min-h-[44px] touch-manipulation whitespace-nowrap ${
                     activeSection === section.id
                       ? `bg-gradient-to-r ${section.color} text-white shadow-lg scale-105`
-                      : 'bg-white/10 text-gray-300 hover:bg-white/20 backdrop-blur-sm border border-white/10'
+                      : 'bg-white/10 text-gray-300 hover:bg-white/20 backdrop-blur-sm border border-white/10 active:scale-95'
                   }`}
                 >
                   <span className="mr-1">{section.icon}</span>
-                  {section.title}
+                  <span className="hidden sm:inline">{section.title}</span>
+                  <span className="sm:hidden">{section.title.split(' ')[0]}</span>
                 </button>
               ))}
             </div>
@@ -449,21 +451,21 @@ export default function HardwarePage() {
         </div>
 
         {/* Full-Screen 3D Viewer Section */}
-        <div ref={viewerRef} className="relative w-full" style={{ height: isFullscreen ? '100vh' : 'calc(100vh - 200px)', minHeight: '800px' }}>
+        <div ref={viewerRef} className="relative w-full" style={{ height: isFullscreen ? '100vh' : 'calc(100vh - 200px)', minHeight: '400px' }}>
           <div ref={canvasRef} className="absolute inset-0 w-full h-full">
             <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
               <Scene activeSection={activeSection} onSectionChange={setActiveSection} />
             </Canvas>
           </div>
 
-          {/* Floating Controls Overlay - Top Right */}
-          <div className="absolute top-6 right-6 z-50 flex flex-col gap-3">
+          {/* Floating Controls Overlay - Top Right - Mobile Optimized */}
+          <div className="absolute top-2 right-2 sm:top-4 sm:right-4 md:top-6 md:right-6 z-50 flex flex-col gap-2 sm:gap-3 max-w-[calc(100%-1rem)] sm:max-w-none">
             {/* Purchase Button - Floating */}
             <a
               href="https://payments.cashfree.com/forms?code=dfweg"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white font-bold px-6 py-3 rounded-xl shadow-2xl shadow-emerald-500/50 hover:shadow-emerald-500/70 transition-all duration-300 hover:scale-105 transform text-center backdrop-blur-xl border border-white/20"
+              className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white font-bold px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 rounded-xl shadow-2xl shadow-emerald-500/50 hover:shadow-emerald-500/70 transition-all duration-300 hover:scale-105 transform text-center backdrop-blur-xl border border-white/20 text-xs sm:text-sm min-h-[44px] touch-manipulation"
               onClick={(e) => {
                 gsap.to(e.currentTarget, {
                   scale: 0.95,
@@ -474,21 +476,23 @@ export default function HardwarePage() {
                 });
               }}
             >
-              <span className="text-lg mr-2">🛒</span>
-              <span>Purchase Device</span>
+              <span className="text-base sm:text-lg mr-1 sm:mr-2">🛒</span>
+              <span className="hidden sm:inline">Purchase Device</span>
+              <span className="sm:hidden">Buy</span>
             </a>
 
             {/* Fullscreen Toggle */}
             <button
               onClick={toggleFullscreen}
-              className="bg-black/60 backdrop-blur-xl px-4 py-2 rounded-xl border border-white/20 hover:bg-black/80 transition-all text-white text-sm font-semibold"
+              className="bg-black/60 backdrop-blur-xl px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-white/20 hover:bg-black/80 transition-all text-white text-xs sm:text-sm font-semibold min-h-[44px] touch-manipulation active:scale-95"
             >
-              {isFullscreen ? '⤓ Exit Fullscreen' : '⤢ Fullscreen'}
+              <span className="hidden sm:inline">{isFullscreen ? '⤓ Exit Fullscreen' : '⤢ Fullscreen'}</span>
+              <span className="sm:hidden">{isFullscreen ? '⤓' : '⤢'}</span>
             </button>
 
-            {/* Patient Selection - Floating Panel */}
-            <div className="bg-black/60 backdrop-blur-xl rounded-xl p-4 border border-white/20 shadow-2xl min-w-[280px]">
-              <h3 className="text-sm font-bold mb-3 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+            {/* Patient Selection - Floating Panel - Mobile Optimized */}
+            <div className="bg-black/60 backdrop-blur-xl rounded-xl p-3 sm:p-4 border border-white/20 shadow-2xl min-w-[200px] sm:min-w-[280px] max-w-[calc(100vw-1rem)]">
+              <h3 className="text-xs sm:text-sm font-bold mb-2 sm:mb-3 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
                 Select Patient
               </h3>
               {loading ? (
@@ -501,7 +505,7 @@ export default function HardwarePage() {
                     <button
                       key={patient.id}
                       onClick={() => handlePatientSelect(patient)}
-                      className={`w-full text-left px-3 py-2 rounded-lg transition-all text-sm ${
+                      className={`w-full text-left px-3 py-2.5 sm:py-2 rounded-lg transition-all text-xs sm:text-sm min-h-[44px] touch-manipulation active:scale-95 ${
                         selectedPatient?.id === patient.id
                           ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
                           : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10'
@@ -554,13 +558,13 @@ export default function HardwarePage() {
             )}
           </div>
 
-          {/* Floating Info Panel - Bottom Left */}
-          <div className="absolute bottom-6 left-6 z-50 flex flex-col gap-3">
-            <div className="bg-black/60 backdrop-blur-xl rounded-xl p-4 border border-white/20 shadow-2xl">
-              <h3 className="text-lg font-bold mb-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          {/* Floating Info Panel - Bottom Left - Mobile Optimized */}
+          <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 md:bottom-6 md:left-6 z-50 flex flex-col gap-2 sm:gap-3 max-w-[calc(100%-1rem)] sm:max-w-sm md:max-w-md">
+            <div className="bg-black/60 backdrop-blur-xl rounded-xl p-3 sm:p-4 border border-white/20 shadow-2xl">
+              <h3 className="text-sm sm:text-base md:text-lg font-bold mb-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                 {hardwareSections.find(s => s.id === activeSection)?.title || '3D Model Viewer'}
               </h3>
-              <p className="text-gray-300 text-sm mb-3">
+              <p className="text-gray-300 text-xs sm:text-sm mb-2 sm:mb-3 leading-relaxed">
                 {activeSection === 'section1' && '8 compartments arranged in two rows, each designed to hold blister strips with LED indicators.'}
                 {activeSection === 'section2' && 'Magnetic/Hall effect sensor detects when the entire lid opens, providing timestamp for logs.'}
                 {activeSection === 'section3' && 'Contains ESP32 microcontroller, power management, WiFi module, and buzzer for alerts.'}
@@ -573,18 +577,21 @@ export default function HardwarePage() {
                 {activeSection === 'section10' && 'Step-by-step guide to build a prototype using Arduino/ESP32 for demonstration and testing purposes.'}
               </p>
               <div className="text-xs text-gray-400 space-y-1">
-                <p>🖱️ <strong>Rotate:</strong> Left click + drag</p>
-                <p>🔍 <strong>Zoom:</strong> Scroll wheel</p>
-                <p>↔️ <strong>Pan:</strong> Right click + drag</p>
+                <p className="hidden sm:block">🖱️ <strong>Rotate:</strong> Left click + drag</p>
+                <p className="sm:hidden">👆 <strong>Rotate:</strong> Touch + drag</p>
+                <p className="hidden sm:block">🔍 <strong>Zoom:</strong> Scroll wheel</p>
+                <p className="sm:hidden">🔍 <strong>Zoom:</strong> Pinch</p>
+                <p className="hidden sm:block">↔️ <strong>Pan:</strong> Right click + drag</p>
+                <p className="sm:hidden">↔️ <strong>Pan:</strong> Two fingers + drag</p>
               </div>
             </div>
 
-            {/* Purchase Button - Bottom Left */}
+            {/* Purchase Button - Bottom Left - Mobile Optimized */}
             <a
               href="https://payments.cashfree.com/forms?code=dfweg"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white font-bold px-6 py-4 rounded-xl shadow-2xl shadow-emerald-500/50 hover:shadow-emerald-500/70 transition-all duration-300 hover:scale-105 transform text-center backdrop-blur-xl border border-white/20 flex items-center justify-center gap-2"
+              className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white font-bold px-4 sm:px-6 py-3 sm:py-4 rounded-xl shadow-2xl shadow-emerald-500/50 hover:shadow-emerald-500/70 transition-all duration-300 hover:scale-105 transform text-center backdrop-blur-xl border border-white/20 flex items-center justify-center gap-2 text-sm sm:text-base min-h-[44px] touch-manipulation"
               onClick={(e) => {
                 gsap.to(e.currentTarget, {
                   scale: 0.95,
@@ -595,28 +602,29 @@ export default function HardwarePage() {
                 });
               }}
             >
-              <span className="text-xl">🛒</span>
-              <span>Purchase CareSure Device</span>
-              <span className="text-lg">→</span>
+              <span className="text-lg sm:text-xl">🛒</span>
+              <span className="hidden sm:inline">Purchase CareSure Device</span>
+              <span className="sm:hidden">Purchase Device</span>
+              <span className="text-base sm:text-lg">→</span>
             </a>
           </div>
 
-          {/* Section Navigation - Bottom Center */}
-          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-50">
-            <div className="bg-black/60 backdrop-blur-xl rounded-full px-4 py-2 border border-white/20 shadow-2xl">
-              <div className="flex gap-2">
+          {/* Section Navigation - Bottom Center - Mobile Optimized */}
+          <div className="absolute bottom-2 sm:bottom-4 md:bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+            <div className="bg-black/60 backdrop-blur-xl rounded-full px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 border border-white/20 shadow-2xl max-w-[calc(100vw-1rem)] overflow-x-auto">
+              <div className="flex gap-1 sm:gap-2">
                 {hardwareSections.map((section) => (
                   <button
                     key={section.id}
                     onClick={() => handleSectionClick(section.id)}
-                    className={`p-2 rounded-full transition-all duration-300 ${
+                    className={`p-2 sm:p-2.5 rounded-full transition-all duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation active:scale-95 ${
                       activeSection === section.id
                         ? `bg-gradient-to-r ${section.color} text-white shadow-lg scale-110`
                         : 'bg-white/10 text-gray-400 hover:bg-white/20'
                     }`}
                     title={section.title}
                   >
-                    <span className="text-lg">{section.icon}</span>
+                    <span className="text-base sm:text-lg">{section.icon}</span>
                   </button>
                 ))}
               </div>

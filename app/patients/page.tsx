@@ -121,16 +121,17 @@ export default function PatientsPage() {
         </div>
       </nav>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-600 via-rose-500 to-violet-600 bg-clip-text text-transparent drop-shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-4 sm:py-6 md:py-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-600 via-rose-500 to-violet-600 bg-clip-text text-transparent drop-shadow-sm">
             Patients
           </h1>
           <Link
             href="/patients/add"
-            className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-2 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-orange-500/50 font-medium backdrop-blur-sm"
+            className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 sm:px-6 py-2.5 sm:py-2 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-orange-500/50 font-medium backdrop-blur-sm min-h-[44px] flex items-center justify-center touch-manipulation active:scale-95 w-full sm:w-auto"
           >
-            Add New Patient
+            <span className="sm:hidden">➕ </span>
+            <span>Add New Patient</span>
           </Link>
         </div>
 
@@ -149,12 +150,12 @@ export default function PatientsPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {patients.map((patient) => (
               <Link
                 key={patient.id}
                 href={`/patients/${patient.id}`}
-                className="bg-white/70 backdrop-blur-lg rounded-2xl shadow-xl border border-orange-200/50 p-6 hover:border-violet-400 hover:shadow-2xl transition-all duration-300"
+                className="bg-white/70 backdrop-blur-lg rounded-2xl shadow-xl border border-orange-200/50 p-4 sm:p-6 hover:border-violet-400 hover:shadow-2xl transition-all duration-300 active:scale-95 touch-manipulation"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
