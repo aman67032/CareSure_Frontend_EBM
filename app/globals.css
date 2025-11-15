@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+:root {
+  /* Light Theme (30%) */
+  --bg-light: #f8f9fa;
+  --bg-card-light: #ffffff;
+  --text-light: #1a1a1a;
+  --text-secondary-light: #6b7280;
+  
+  /* Dark Theme (70%) */
+  --bg-dark: #0f172a;
+  --bg-card-dark: #1e293b;
+  --bg-card-hover-dark: #334155;
+  --text-dark: #f1f5f9;
+  --text-secondary-dark: #cbd5e1;
+  
+  /* Theme Colors */
+  --orange-primary: #ff6b35;
+  --orange-light: #ff8c5a;
+  --orange-dark: #e55a2b;
+  
+  --blue-primary: #3b82f6;
+  --blue-light: #60a5fa;
+  --blue-dark: #2563eb;
+  
+  --violet-primary: #8b5cf6;
+  --violet-light: #a78bfa;
+  --violet-dark: #7c3aed;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #ff6b35 0%, #3b82f6 50%, #8b5cf6 100%);
+  --gradient-dark: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+@theme inline {
+  --color-background: var(--bg-dark);
+  --color-foreground: var(--text-dark);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--bg-dark);
+  color: var(--text-dark);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
