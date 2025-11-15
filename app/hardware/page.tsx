@@ -178,7 +178,7 @@ function CameraController({ activeSection, controlsRef }: { activeSection: strin
 }
 
 // Scene Component with annotations
-function Scene({ activeSection, onSectionChange }: { activeSection: string | null; onSectionChange: (section: string) => void }) {
+function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSection: string | null; onSectionChange: (section: string) => void; selectedPrototype: 'prototype1' | 'prototype2' }) {
   const controlsRef = useRef<any>(null);
 
   return (
@@ -192,7 +192,10 @@ function Scene({ activeSection, onSectionChange }: { activeSection: string | nul
           <div className="text-white font-semibold text-xl">Loading 3D model...</div>
         </Html>
       }>
-        <Model url="/unffsxgvtitled.glb" activeSection={activeSection} />
+        <Model 
+          url={selectedPrototype === 'prototype1' ? '/unffsxgvtitled.glb' : '/hitem3d (1).glb'} 
+          activeSection={activeSection} 
+        />
       </Suspense>
       <CameraController activeSection={activeSection} controlsRef={controlsRef} />
       
@@ -201,31 +204,51 @@ function Scene({ activeSection, onSectionChange }: { activeSection: string | nul
         <>
           <ModelAnnotation 
             position={[0, 1.5, 0]} 
-            label="Compartment Tray" 
-            description="White blocks hold blister strips"
+            label={selectedPrototype === 'prototype1' ? "Compartment Tray" : "Grid Compartments"} 
+            description={selectedPrototype === 'prototype1' ? "White blocks hold blister strips" : "8-28 compartments in grid layout with flip-top lids"}
             isActive={true}
             onClick={() => onSectionChange('section1')}
           />
-          <ModelAnnotation 
-            position={[0.8, 1.5, 0.3]} 
-            label="Green LED" 
-            description="Current dose indicator"
-            isActive={true}
-          />
-          <ModelAnnotation 
-            position={[-0.8, 1.5, 0.3]} 
-            label="Red LED" 
-            description="Missed/wrong dose alert"
-            isActive={true}
-          />
+          {selectedPrototype === 'prototype1' && (
+            <>
+              <ModelAnnotation 
+                position={[0.8, 1.5, 0.3]} 
+                label="Green LED" 
+                description="Current dose indicator"
+                isActive={true}
+              />
+              <ModelAnnotation 
+                position={[-0.8, 1.5, 0.3]} 
+                label="Red LED" 
+                description="Missed/wrong dose alert"
+                isActive={true}
+              />
+            </>
+          )}
+          {selectedPrototype === 'prototype2' && (
+            <>
+              <ModelAnnotation 
+                position={[0.8, 1.5, 0.3]} 
+                label="Flip-Top Lid" 
+                description="Individual transparent lids with soft-close hinges"
+                isActive={true}
+              />
+              <ModelAnnotation 
+                position={[-0.8, 1.5, 0.3]} 
+                label="Foam-Magnet Sensor" 
+                description="Detects pill removal via magnet position shift"
+                isActive={true}
+              />
+            </>
+          )}
         </>
       )}
       
       {activeSection === 'section2' && (
         <ModelAnnotation 
           position={[0, 2, 0]} 
-          label="Main Lid & Sensor" 
-          description="Magnetic/Hall effect sensor"
+          label={selectedPrototype === 'prototype1' ? "Main Lid & Sensor" : "Individual Lids"} 
+          description={selectedPrototype === 'prototype1' ? "Magnetic/Hall effect sensor" : "Flip-top lids with child-resistant locks"}
           isActive={true}
         />
       )}
@@ -233,8 +256,17 @@ function Scene({ activeSection, onSectionChange }: { activeSection: string | nul
       {activeSection === 'section3' && (
         <ModelAnnotation 
           position={[0, 0, -1.5]} 
-          label="Electronics Chamber" 
-          description="ESP32, WiFi, Power, Buzzer"
+          label={selectedPrototype === 'prototype1' ? "Electronics Chamber" : "Central Electronics Panel"} 
+          description={selectedPrototype === 'prototype1' ? "ESP32, WiFi, Power, Buzzer" : "OLED/LCD screen, buttons, ESP32, battery management"}
+          isActive={true}
+        />
+      )}
+      
+      {activeSection === 'section5' && selectedPrototype === 'prototype2' && (
+        <ModelAnnotation 
+          position={[0, -0.5, 0]} 
+          label="Hall-Effect Sensor PCB" 
+          description="Detects magnet movement when pill is removed"
           isActive={true}
         />
       )}
@@ -314,6 +346,7 @@ export default function HardwarePage() {
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<string | null>('section1');
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [selectedPrototype, setSelectedPrototype] = useState<'prototype1' | 'prototype2'>('prototype1');
   
   const viewerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -404,6 +437,41 @@ export default function HardwarePage() {
               Interactive 3D exploration of the CareSure Smart Medicine Box
             </p>
             
+            {/* Prototype Selector */}
+            <div className="mb-4 sm:mb-6">
+              <div className="inline-flex items-center gap-2 bg-black/40 backdrop-blur-xl rounded-full p-1 border border-white/20 shadow-xl">
+                <button
+                  onClick={() => setSelectedPrototype('prototype1')}
+                  className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 min-h-[44px] touch-manipulation ${
+                    selectedPrototype === 'prototype1'
+                      ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg scale-105'
+                      : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <span className="mr-1.5">📦</span>
+                  <span className="hidden sm:inline">Prototype 1</span>
+                  <span className="sm:hidden">P1</span>
+                </button>
+                <button
+                  onClick={() => setSelectedPrototype('prototype2')}
+                  className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 min-h-[44px] touch-manipulation ${
+                    selectedPrototype === 'prototype2'
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg scale-105'
+                      : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <span className="mr-1.5">🧠</span>
+                  <span className="hidden sm:inline">Prototype 2</span>
+                  <span className="sm:hidden">P2</span>
+                </button>
+              </div>
+              <p className="text-xs sm:text-sm text-gray-500 mt-2 ml-2">
+                {selectedPrototype === 'prototype1' 
+                  ? 'Basic 8-compartment design with LED indicators'
+                  : 'Advanced grid-based design (8-28 compartments) with foam-magnet sensors'}
+              </p>
+            </div>
+            
             {/* Purchase Button - Hero */}
             <div className="mb-4 sm:mb-6">
               <a
@@ -454,7 +522,7 @@ export default function HardwarePage() {
         <div ref={viewerRef} className="relative w-full" style={{ height: isFullscreen ? '100vh' : 'calc(100vh - 200px)', minHeight: '400px' }}>
           <div ref={canvasRef} className="absolute inset-0 w-full h-full">
             <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
-              <Scene activeSection={activeSection} onSectionChange={setActiveSection} />
+              <Scene activeSection={activeSection} onSectionChange={setActiveSection} selectedPrototype={selectedPrototype} />
             </Canvas>
           </div>
 
@@ -561,20 +629,69 @@ export default function HardwarePage() {
           {/* Floating Info Panel - Bottom Left - Mobile Optimized */}
           <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 md:bottom-6 md:left-6 z-50 flex flex-col gap-2 sm:gap-3 max-w-[calc(100%-1rem)] sm:max-w-sm md:max-w-md">
             <div className="bg-black/60 backdrop-blur-xl rounded-xl p-3 sm:p-4 border border-white/20 shadow-2xl">
-              <h3 className="text-sm sm:text-base md:text-lg font-bold mb-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                {hardwareSections.find(s => s.id === activeSection)?.title || '3D Model Viewer'}
-              </h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm sm:text-base md:text-lg font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  {hardwareSections.find(s => s.id === activeSection)?.title || '3D Model Viewer'}
+                </h3>
+                <span className={`text-xs px-2 py-1 rounded-full font-semibold ${
+                  selectedPrototype === 'prototype1' 
+                    ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' 
+                    : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                }`}>
+                  {selectedPrototype === 'prototype1' ? 'P1' : 'P2'}
+                </span>
+              </div>
               <p className="text-gray-300 text-xs sm:text-sm mb-2 sm:mb-3 leading-relaxed">
-                {activeSection === 'section1' && '8 compartments arranged in two rows, each designed to hold blister strips with LED indicators.'}
-                {activeSection === 'section2' && 'Magnetic/Hall effect sensor detects when the entire lid opens, providing timestamp for logs.'}
-                {activeSection === 'section3' && 'Contains ESP32 microcontroller, power management, WiFi module, and buzzer for alerts.'}
-                {activeSection === 'section4' && 'LED matrix shows status: Green for current dose, Red for missed/wrong, Yellow for override.'}
-                {activeSection === 'section5' && 'Lid sensor and per-compartment sensors detect openings and track adherence.'}
-                {activeSection === 'section6' && 'Real-time synchronization with cloud platform for schedule updates and adherence tracking.'}
-                {activeSection === 'section7' && 'USB-C charging port, QR code sticker, and battery access cover on the back panel.'}
-                {activeSection === 'section8' && 'Rubber anti-slip feet for safety and ventilation spacing to prevent heat build-up.'}
-                {activeSection === 'section9' && 'Complete workflow from caregiver schedule setup to patient dose events and cloud logging.'}
-                {activeSection === 'section10' && 'Step-by-step guide to build a prototype using Arduino/ESP32 for demonstration and testing purposes.'}
+                {activeSection === 'section1' && (
+                  selectedPrototype === 'prototype1' 
+                    ? '8 compartments arranged in two rows, each designed to hold blister strips with LED indicators.'
+                    : '8-28 compartments in a grid layout (4×7 or 2×4 matrix). Each compartment has individual flip-top transparent lids with color-coded indicators. Size per slot: ~35×35mm, 15-20mm depth. Optional Braille markings for visually impaired users.'
+                )}
+                {activeSection === 'section2' && (
+                  selectedPrototype === 'prototype1'
+                    ? 'Magnetic/Hall effect sensor detects when the entire lid opens, providing timestamp for logs.'
+                    : 'Individual flip-top lids for each compartment with soft-close hinges, small locking notch for child resistance, and indented area for finger grip. Made of translucent ABS/polycarbonate (medical-grade plastic).'
+                )}
+                {activeSection === 'section3' && (
+                  selectedPrototype === 'prototype1'
+                    ? 'Contains ESP32 microcontroller, power management, WiFi module, and buzzer for alerts.'
+                    : 'Central electronics panel on front with OLED/LCD screen (1.3-2 inch) showing date, time, battery %, Wi-Fi status, and next scheduled medicine. Three push buttons: manual dose override, Wi-Fi reset, and settings/menu. ESP32 microcontroller (Wi-Fi + BLE), battery management IC + Li-ion cell, piezo buzzer, and LED drivers.'
+                )}
+                {activeSection === 'section4' && (
+                  selectedPrototype === 'prototype1'
+                    ? 'LED matrix shows status: Green for current dose, Red for missed/wrong, Yellow for override.'
+                    : 'LED indicators near each compartment. Green LED for current dose time, Red for missed/wrong attempt, Yellow/Flashing for caregiver override. Optional LED strip under lid lip for additional brightness. Visual cues above/beside each lid.'
+                )}
+                {activeSection === 'section5' && (
+                  selectedPrototype === 'prototype1'
+                    ? 'Lid sensor and per-compartment sensors detect openings and track adherence.'
+                    : 'Foam + magnet sensor system: Compressible silicone foam pad (~4-5mm thick) with neodymium magnet embedded in center at bottom of each compartment. Hall-effect sensor PCB sits directly under each magnet. When pill is removed, foam decompresses, magnet position shifts, and sensor detects movement. Minimal wiring routed below via thin 2-layer PCB.'
+                )}
+                {activeSection === 'section6' && (
+                  selectedPrototype === 'prototype1'
+                    ? 'Real-time synchronization with cloud platform for schedule updates and adherence tracking.'
+                    : 'Wi-Fi module connects to cloud via MQTT or HTTPS. Box pulls medication schedule updates hourly or on demand. Logs sensor-triggered events (pill removed, lid opened). Sends real-time confirmation to caregiver dashboard. BLE for local device pairing.'
+                )}
+                {activeSection === 'section7' && (
+                  selectedPrototype === 'prototype1'
+                    ? 'USB-C charging port, QR code sticker, and battery access cover on the back panel.'
+                    : 'Back or side panel features: USB-C charging port, battery access cover (optional), speaker outlet holes for buzzer/voice alerts, QR code sticker for box pairing (Box ID), and Wi-Fi status LED (blinking/solid).'
+                )}
+                {activeSection === 'section8' && (
+                  selectedPrototype === 'prototype1'
+                    ? 'Rubber anti-slip feet for safety and ventilation spacing to prevent heat build-up.'
+                    : 'Base includes: Ventilation holes to avoid overheating, four rubber feet to prevent sliding, and mounting slots (optional wall-mount version). Dimensions: Width ~20-30cm, Height ~6-8cm, Depth ~14-18cm (for 4×7 grid).'
+                )}
+                {activeSection === 'section9' && (
+                  selectedPrototype === 'prototype1'
+                    ? 'Complete workflow from caregiver schedule setup to patient dose events and cloud logging.'
+                    : 'For each dose time: Box sounds buzzer for 10-30 seconds, corresponding compartment LED turns GREEN. If no activity detected in 10 mins → missed dose alert, LED turns RED. Complete workflow from caregiver schedule setup to patient dose events and cloud logging with real-time updates.'
+                )}
+                {activeSection === 'section10' && (
+                  selectedPrototype === 'prototype1'
+                    ? 'Step-by-step guide to build a prototype using Arduino/ESP32 for demonstration and testing purposes.'
+                    : 'Advanced prototype features: Foam-magnet detection system, grid-based compartment layout, individual lid sensors, OLED/LCD display, multiple button controls. Step-by-step guide to build using Arduino/ESP32 with Hall sensors and foam pads for demonstration and testing purposes.'
+                )}
               </p>
               <div className="text-xs text-gray-400 space-y-1">
                 <p className="hidden sm:block">🖱️ <strong>Rotate:</strong> Left click + drag</p>
