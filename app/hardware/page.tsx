@@ -24,6 +24,8 @@ class ErrorBoundary extends Component<
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
+    console.error('Error stack:', error.stack);
+    console.error('Component stack:', errorInfo.componentStack);
   }
 
   render() {
@@ -128,14 +130,28 @@ function ModelAnnotation({
   );
 }
 
-// 3D Model Component
+// 3D Model Component with error handling
 function Model({ url, activeSection }: { url: string; activeSection: string | null }) {
-  const { scene } = useGLTF(url);
+  // useGLTF can throw errors, which will be caught by ErrorBoundary
+  const gltf = useGLTF(url);
+  const scene = gltf.scene;
   const meshRef = useRef<THREE.Group>(null);
   const rotationRef = useRef(0);
   const targetRotationRef = useRef(0);
   const animationRef = useRef<any>(null);
   const isInitializedRef = useRef(false);
+  
+  // Clone the scene to avoid issues with multiple instances
+  useEffect(() => {
+    if (scene && meshRef.current) {
+      scene.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+    }
+  }, [scene]);
 
   // Set initial rotation based on which model is loaded
   useEffect(() => {
@@ -617,9 +633,15 @@ export default function HardwarePage() {
             <ErrorBoundary
               fallback={
                 <div className="flex items-center justify-center h-full bg-[#0a0a0a] text-white">
-                  <div className="text-center p-8">
+                  <div className="text-center p-8 max-w-md">
                     <h3 className="text-xl font-bold mb-4 text-red-400">3D Viewer Error</h3>
-                    <p className="text-gray-400 mb-4">Unable to load 3D model. Please try refreshing the page.</p>
+                    <p className="text-gray-400 mb-2">Unable to load 3D model.</p>
+                    <p className="text-gray-500 text-sm mb-2">
+                      Model: {selectedPrototype === 'prototype1' ? 'unffsxgvtitled.glb' : 'hitem3d-1.glb'}
+                    </p>
+                    <p className="text-gray-500 text-xs mb-4">
+                      This might be a deployment issue. The GLB file may not be available yet. Please check the browser console for details.
+                    </p>
                     <button
                       onClick={() => window.location.reload()}
                       className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-colors min-h-[44px] touch-manipulation"
