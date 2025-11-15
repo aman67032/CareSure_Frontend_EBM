@@ -158,44 +158,53 @@ function CameraController({ activeSection, controlsRef }: { activeSection: strin
   const animationRef = useRef<any>(null);
 
   useEffect(() => {
-    if (!activeSection) return;
-    const config = cameraPositions[activeSection];
-    if (!config) return;
+    if (!activeSection || !camera) return;
+    
+    try {
+      const config = cameraPositions[activeSection];
+      if (!config) return;
 
-    if (animationRef.current) {
-      animationRef.current.pause();
-    }
-
-    const currentPos = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
-    const targetPos = { x: config.position[0], y: config.position[1], z: config.position[2] };
-
-    animationRef.current = animate(currentPos, {
-      ...targetPos,
-      duration: 2000,
-      easing: 'easeInOutQuad',
-      update: () => {
-        camera.position.set(currentPos.x, currentPos.y, currentPos.z);
-        camera.lookAt(config.target[0], config.target[1], config.target[2]);
+      if (animationRef.current) {
+        animationRef.current.pause();
       }
-    });
 
-    if (controlsRef.current) {
-      const currentTarget = {
-        x: controlsRef.current.target.x,
-        y: controlsRef.current.target.y,
-        z: controlsRef.current.target.z,
-      };
-      animate(currentTarget, {
-        x: config.target[0],
-        y: config.target[1],
-        z: config.target[2],
+      const currentPos = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
+      const targetPos = { x: config.position[0], y: config.position[1], z: config.position[2] };
+
+      animationRef.current = animate(currentPos, {
+        ...targetPos,
         duration: 2000,
         easing: 'easeInOutQuad',
         update: () => {
-          controlsRef.current.target.set(currentTarget.x, currentTarget.y, currentTarget.z);
-          controlsRef.current.update();
+          if (camera) {
+            camera.position.set(currentPos.x, currentPos.y, currentPos.z);
+            camera.lookAt(config.target[0], config.target[1], config.target[2]);
+          }
         }
       });
+
+      if (controlsRef.current) {
+        const currentTarget = {
+          x: controlsRef.current.target.x,
+          y: controlsRef.current.target.y,
+          z: controlsRef.current.target.z,
+        };
+        animate(currentTarget, {
+          x: config.target[0],
+          y: config.target[1],
+          z: config.target[2],
+          duration: 2000,
+          easing: 'easeInOutQuad',
+          update: () => {
+            if (controlsRef.current) {
+              controlsRef.current.target.set(currentTarget.x, currentTarget.y, currentTarget.z);
+              controlsRef.current.update();
+            }
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error in CameraController:', error);
     }
   }, [activeSection, camera, controlsRef]);
 
@@ -248,7 +257,7 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
         </Html>
       }>
         <Model 
-          url={selectedPrototype === 'prototype1' ? '/unffsxgvtitled.glb' : '/hitem3d (1).glb'} 
+          url={selectedPrototype === 'prototype1' ? '/unffsxgvtitled.glb' : encodeURI('/hitem3d (1).glb')} 
           activeSection={activeSection} 
         />
       </Suspense>
