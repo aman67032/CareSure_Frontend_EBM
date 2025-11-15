@@ -69,13 +69,14 @@ export default function PatientDashboardPage() {
       setError('');
       
       // Test if backend is accessible
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://careure-ebm-backend.onrender.com/api';
       try {
-        const healthCheck = await fetch('http://localhost:5000/api/health');
+        const healthCheck = await fetch(`${apiUrl}/health`);
         if (!healthCheck.ok) {
           throw new Error('Backend server is not responding');
         }
       } catch (healthError) {
-        setError('Unable to connect to server. Please ensure the backend is running on port 5000 and has been restarted to load patient routes.');
+        setError('Unable to connect to server. Please check your internet connection.');
         setLoading(false);
         return;
       }

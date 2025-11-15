@@ -50,13 +50,14 @@ export default function LoginPage() {
       console.log('Attempting login with:', { email: formData.email });
       
       // Test connection first
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://careure-ebm-backend.onrender.com/api';
       try {
-        const healthCheck = await fetch('http://localhost:5000/api/health');
+        const healthCheck = await fetch(`${apiUrl}/health`);
         if (!healthCheck.ok) {
           throw new Error('Backend server is not responding');
         }
       } catch (healthError) {
-        setError('Unable to connect to server. Please ensure the backend is running on port 5000.');
+        setError('Unable to connect to server. Please check your internet connection.');
         setLoading(false);
         return;
       }

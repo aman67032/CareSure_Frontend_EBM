@@ -1,0 +1,9 @@
+# Copy this file to .env.local and fill in your values
+
+# Backend API URL
+# For production (Render):
+NEXT_PUBLIC_API_URL=https://careure-ebm-backend.onrender.com/api
+
+# For local development:
+# NEXT_PUBLIC_API_URL=http://localhost:5000/api
+

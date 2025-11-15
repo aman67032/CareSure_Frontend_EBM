@@ -9,9 +9,13 @@ Next.js frontend application for CareSure.
 npm install
 ```
 
-2. Create `.env.local`:
+2. Create `.env.local` (or copy from `ENV_EXAMPLE.txt`):
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
+# For production (Render backend):
+NEXT_PUBLIC_API_URL=https://careure-ebm-backend.onrender.com/api
+
+# For local development:
+# NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ```
 
 3. Start development server:
