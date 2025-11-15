@@ -13,17 +13,18 @@ import { patientAPI, deviceAPI } from '@/lib/api';
 gsap.registerPlugin(ScrollTrigger);
 
 // Camera position configurations for each section
+// Note: Prototype 1 model is rotated 180° to show front, so rotations are adjusted
 const cameraPositions: Record<string, { position: [number, number, number]; target: [number, number, number]; rotation: number }> = {
-  section1: { position: [0, 2, 5], target: [0, 1.5, 0], rotation: 0 },
-  section2: { position: [0, 3, 4], target: [0, 2, 0], rotation: 0 },
-  section3: { position: [0, 0, -5], target: [0, 0, -1.5], rotation: Math.PI },
-  section4: { position: [0, 2, 5], target: [0, 1.5, 0], rotation: 0 },
-  section5: { position: [3, 1.5, 3], target: [0, 0, 0], rotation: Math.PI / 4 },
-  section6: { position: [0, 2, 5], target: [0, 1, 0], rotation: 0 },
-  section7: { position: [-4, 1, 0], target: [-2, 0, 0], rotation: Math.PI / 2 },
-  section8: { position: [0, -2, 4], target: [0, -1, 0], rotation: Math.PI },
-  section9: { position: [0, 2, 5], target: [0, 1, 0], rotation: 0 },
-  section10: { position: [0, 2, 5], target: [0, 1, 0], rotation: 0 },
+  section1: { position: [0, 2, 5], target: [0, 1.5, 0], rotation: Math.PI }, // Front view (180° for prototype 1)
+  section2: { position: [0, 3, 4], target: [0, 2, 0], rotation: Math.PI }, // Top view
+  section3: { position: [0, 0, -5], target: [0, 0, -1.5], rotation: 0 }, // Back view (0° because model is rotated)
+  section4: { position: [0, 2, 5], target: [0, 1.5, 0], rotation: Math.PI }, // Front view
+  section5: { position: [3, 1.5, 3], target: [0, 0, 0], rotation: Math.PI + Math.PI / 4 }, // Side view adjusted
+  section6: { position: [0, 2, 5], target: [0, 1, 0], rotation: Math.PI }, // Front view
+  section7: { position: [-4, 1, 0], target: [-2, 0, 0], rotation: Math.PI / 2 }, // Left side
+  section8: { position: [0, -2, 4], target: [0, -1, 0], rotation: 0 }, // Bottom view
+  section9: { position: [0, 2, 5], target: [0, 1, 0], rotation: Math.PI }, // Front view
+  section10: { position: [0, 2, 5], target: [0, 1, 0], rotation: Math.PI }, // Front view
 };
 
 // Interactive Annotation Component for 3D space
@@ -95,6 +96,26 @@ function Model({ url, activeSection }: { url: string; activeSection: string | nu
   const rotationRef = useRef(0);
   const targetRotationRef = useRef(0);
   const animationRef = useRef<any>(null);
+  const isInitializedRef = useRef(false);
+
+  // Set initial rotation based on which model is loaded
+  useEffect(() => {
+    if (meshRef.current && !isInitializedRef.current) {
+      // Check if it's prototype 1 (unffsxgvtitled.glb) - needs rotation to show front
+      if (url.includes('unffsxgvtitled')) {
+        // Rotate to show front view (adjust angle as needed)
+        meshRef.current.rotation.y = Math.PI; // 180 degrees to show front
+        rotationRef.current = Math.PI;
+        targetRotationRef.current = Math.PI;
+      } else {
+        // Prototype 2 - might need different initial rotation
+        meshRef.current.rotation.y = 0;
+        rotationRef.current = 0;
+        targetRotationRef.current = 0;
+      }
+      isInitializedRef.current = true;
+    }
+  }, [url]);
 
   useEffect(() => {
     if (!activeSection || !meshRef.current) return;
@@ -180,6 +201,22 @@ function CameraController({ activeSection, controlsRef }: { activeSection: strin
 // Scene Component with annotations
 function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSection: string | null; onSectionChange: (section: string) => void; selectedPrototype: 'prototype1' | 'prototype2' }) {
   const controlsRef = useRef<any>(null);
+  const { camera } = useThree();
+
+  // Set initial camera position when component mounts
+  useEffect(() => {
+    if (activeSection) {
+      const config = cameraPositions[activeSection];
+      if (config) {
+        camera.position.set(config.position[0], config.position[1], config.position[2]);
+        camera.lookAt(config.target[0], config.target[1], config.target[2]);
+      }
+    } else {
+      // Default front view
+      camera.position.set(0, 2, 5);
+      camera.lookAt(0, 1.5, 0);
+    }
+  }, []);
 
   return (
     <>
@@ -521,7 +558,7 @@ export default function HardwarePage() {
         {/* Full-Screen 3D Viewer Section */}
         <div ref={viewerRef} className="relative w-full" style={{ height: isFullscreen ? '100vh' : 'calc(100vh - 200px)', minHeight: '400px' }}>
           <div ref={canvasRef} className="absolute inset-0 w-full h-full">
-            <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
+            <Canvas camera={{ position: [0, 2, 5], fov: 50 }}>
               <Scene activeSection={activeSection} onSectionChange={setActiveSection} selectedPrototype={selectedPrototype} />
             </Canvas>
           </div>
