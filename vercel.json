@@ -1,6 +1,6 @@
 {
-  "buildCommand": "git lfs pull && npm run build",
-  "installCommand": "git lfs install && npm install",
+  "buildCommand": "git config lfs.url https://github.com/aman67032/CareSure_Frontend_EBM.git/info/lfs && git lfs pull || echo 'Git LFS pull failed, continuing build...' && npm run build",
+  "installCommand": "git lfs install || echo 'Git LFS install skipped' && npm install",
   "framework": "nextjs",
   "headers": [
     {
