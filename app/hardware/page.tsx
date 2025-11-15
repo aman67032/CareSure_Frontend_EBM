@@ -1,16 +1,55 @@
 'use client';
 
-import React, { Suspense, useEffect, useState, useRef } from 'react';
+import React, { Suspense, useEffect, useState, useRef, Component, ErrorInfo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment, Html } from '@react-three/drei';
 import * as THREE from 'three';
-import { animate } from 'animejs';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AuthGuard from '@/components/AuthGuard';
 import { patientAPI, deviceAPI } from '@/lib/api';
 
-gsap.registerPlugin(ScrollTrigger);
+// Error Boundary Component
+class ErrorBoundary extends Component<
+  { children: React.ReactNode; fallback?: React.ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: { children: React.ReactNode; fallback?: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Error caught by boundary:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || (
+        <div className="flex items-center justify-center h-full bg-[#0a0a0a] text-white p-8">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-4 text-red-400">Something went wrong</h2>
+            <p className="text-gray-400 mb-4">{this.state.error?.message || 'An error occurred'}</p>
+            <button
+              onClick={() => {
+                this.setState({ hasError: false, error: null });
+                window.location.reload();
+              }}
+              className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-colors min-h-[44px] touch-manipulation"
+            >
+              Reload Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 // Camera position configurations for each section
 // Note: Prototype 1 model is rotated 180° to show front, so rotations are adjusted
@@ -129,11 +168,11 @@ function Model({ url, activeSection }: { url: string; activeSection: string | nu
       if (animationRef.current) {
         animationRef.current.pause();
       }
-      animationRef.current = animate(rotationRef, {
+      animationRef.current = gsap.to(rotationRef, {
         current: targetRotationRef.current,
-        duration: 1500,
-        easing: 'easeInOutQuad',
-        update: () => {
+        duration: 1.5,
+        ease: 'power2.inOut',
+        onUpdate: () => {
           if (meshRef.current) {
             meshRef.current.rotation.y = rotationRef.current;
           }
@@ -171,11 +210,11 @@ function CameraController({ activeSection, controlsRef }: { activeSection: strin
       const currentPos = { x: camera.position.x, y: camera.position.y, z: camera.position.z };
       const targetPos = { x: config.position[0], y: config.position[1], z: config.position[2] };
 
-      animationRef.current = animate(currentPos, {
+      animationRef.current = gsap.to(currentPos, {
         ...targetPos,
-        duration: 2000,
-        easing: 'easeInOutQuad',
-        update: () => {
+        duration: 2,
+        ease: 'power2.inOut',
+        onUpdate: () => {
           if (camera) {
             camera.position.set(currentPos.x, currentPos.y, currentPos.z);
             camera.lookAt(config.target[0], config.target[1], config.target[2]);
@@ -189,13 +228,13 @@ function CameraController({ activeSection, controlsRef }: { activeSection: strin
           y: controlsRef.current.target.y,
           z: controlsRef.current.target.z,
         };
-        animate(currentTarget, {
+        gsap.to(currentTarget, {
           x: config.target[0],
           y: config.target[1],
           z: config.target[2],
-          duration: 2000,
-          easing: 'easeInOutQuad',
-          update: () => {
+          duration: 2,
+          ease: 'power2.inOut',
+          onUpdate: () => {
             if (controlsRef.current) {
               controlsRef.current.target.set(currentTarget.x, currentTarget.y, currentTarget.z);
               controlsRef.current.update();
@@ -257,7 +296,7 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
         </Html>
       }>
         <Model 
-          url={selectedPrototype === 'prototype1' ? '/unffsxgvtitled.glb' : encodeURI('/hitem3d (1).glb')} 
+          url={selectedPrototype === 'prototype1' ? '/unffsxgvtitled.glb' : '/hitem3d-1.glb'} 
           activeSection={activeSection} 
         />
       </Suspense>
@@ -362,16 +401,6 @@ function Scene({ activeSection, onSectionChange, selectedPrototype }: { activeSe
         />
       )}
       
-      <OrbitControls 
-        ref={controlsRef} 
-        enablePan 
-        enableZoom 
-        enableRotate 
-        minDistance={2} 
-        maxDistance={12}
-        autoRotate={!activeSection}
-        autoRotateSpeed={0.5}
-      />
       <Environment preset="sunset" />
     </>
   );
@@ -585,9 +614,26 @@ export default function HardwarePage() {
         {/* Full-Screen 3D Viewer Section */}
         <div ref={viewerRef} className="relative w-full" style={{ height: isFullscreen ? '100vh' : 'calc(100vh - 200px)', minHeight: '400px' }}>
           <div ref={canvasRef} className="absolute inset-0 w-full h-full">
-            <Canvas camera={{ position: [0, 2, 5], fov: 50 }}>
-              <Scene activeSection={activeSection} onSectionChange={setActiveSection} selectedPrototype={selectedPrototype} />
-            </Canvas>
+            <ErrorBoundary
+              fallback={
+                <div className="flex items-center justify-center h-full bg-[#0a0a0a] text-white">
+                  <div className="text-center p-8">
+                    <h3 className="text-xl font-bold mb-4 text-red-400">3D Viewer Error</h3>
+                    <p className="text-gray-400 mb-4">Unable to load 3D model. Please try refreshing the page.</p>
+                    <button
+                      onClick={() => window.location.reload()}
+                      className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-colors min-h-[44px] touch-manipulation"
+                    >
+                      Reload
+                    </button>
+                  </div>
+                </div>
+              }
+            >
+              <Canvas camera={{ position: [0, 2, 5], fov: 50 }} gl={{ antialias: true, alpha: false }}>
+                <Scene activeSection={activeSection} onSectionChange={setActiveSection} selectedPrototype={selectedPrototype} />
+              </Canvas>
+            </ErrorBoundary>
           </div>
 
           {/* Floating Controls Overlay - Top Right - Mobile Optimized */}
